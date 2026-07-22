@@ -1,30 +1,30 @@
-import React, { useState } from 'react';
-import SendIcon from '@mui/icons-material/Send';
 import SearchIcon from '@mui/icons-material/Search';
+import SendIcon from '@mui/icons-material/Send';
+import React, { useEffect, useRef, useState } from 'react';
+import { createMessagingSocket, getMessages, type Message } from '../api';
 
 type InputFieldProps = {
   value: string;
   onChange: (value: string) => void;
 };
 
-export const InputField: React.FC<InputFieldProps> = () => {
-  const [search, setSearch] = useState('');
-
+export const InputField: React.FC<InputFieldProps> = ({ value, onChange }) => {
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
-      console.log({ search });
-      setSearch('');
+      console.log({ value });
     }
   };
+
+  
 
   return (
     <div className='absolute top-20 h-14 w-full px-4'>
       <input
         type='text'
         placeholder='Find contacts...'
-        value={search}
+        value={value}
         onKeyDown={handleKeyDown}
-        onChange={(e) => setSearch(e.target.value)}
+        onChange={(e) => onChange(e.target.value)}
         className='h-full w-full rounded-2xl border bg-white p-2 text-lg text-black shadow-xl'
       />
       <SearchIcon className='absolute top-1/2 right-5 -translate-y-1/2 transform text-gray-500' />
@@ -33,14 +33,36 @@ export const InputField: React.FC<InputFieldProps> = () => {
 };
 export default InputField;
 
-export const InputMessage: React.FC = () => {
+type InputMessageProps = {
+  contactId: number;
+};
+
+export const InputMessage: React.FC<InputMessageProps> = ({ contactId }) => {
   const [message, setMessage] = useState('');
-  const [messages, setMessages] = useState<string[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const socketRef = useRef<ReturnType<typeof createMessagingSocket> | null>(null);
+
+  useEffect(() => {
+    const socket = createMessagingSocket();
+    socketRef.current = socket;
+    socket.emit('join_contact', contactId);
+    getMessages(contactId).then(setMessages).catch(console.error);
+    socket.on('new_message', (newMessage: Message) => {
+      setMessages((previous) => [...previous, newMessage]);
+    });
+
+    return () => {
+      socket.disconnect();
+      socketRef.current = null;
+    };
+  }, [contactId]);
 
   const sendMessage = () => {
     if (!message.trim()) return;
 
-    setMessages((prev) => [...prev, message]);
+    socketRef.current?.emit('send_message', { contactId, text: message }, (result: { error?: string }) => {
+      if (result?.error) console.error(result.error);
+    });
     setMessage('');
   };
 
@@ -58,12 +80,12 @@ export const InputMessage: React.FC = () => {
     <div className='flex flex-col gap-4'>
       {/* Messages */}
       <div className='flex flex-col gap-2'>
-        {messages.map((msg, index) => (
+        {messages.map((msg) => (
           <div
-            key={index}
+            key={msg.id}
             className='flex justify-end rounded-lg bg-green-100 p-2 px-3 font-bold text-black shadow-xl'
           >
-            {msg}
+            {msg.text}
           </div>
         ))}
       </div>

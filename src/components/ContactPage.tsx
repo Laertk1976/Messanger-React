@@ -1,13 +1,18 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { contacts, type Contact } from '../data/contacts';
+import { getContacts } from '../api';
+import type { Contact } from '../data/contacts';
 import InputField from './InputField';
 //  import { ContactInfoPage } from './ContactInfoPage';
 
 export const ContactPage: React.FC = () => {
   const [search, setSearch] = useState('');
+  const [contacts, setContacts] = useState<Contact[]>([]);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    getContacts().then(setContacts).catch(console.error);
+  }, []);
   const handleContactClick = (contact: Contact) => {
     navigate(`/contact/${contact.id}`, { state: { contact } });
     console.log(contact);
