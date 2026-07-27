@@ -49,3 +49,4 @@ export const contacts: Contact[] = [
     email: 'daniel.wilson@example.com',
   },
 ];
+export default contacts;

@@ -15,8 +15,6 @@ export const InputField: React.FC<InputFieldProps> = ({ value, onChange }) => {
     }
   };
 
-  
-
   return (
     <div className='absolute top-20 h-14 w-full px-4'>
       <input
@@ -40,7 +38,9 @@ type InputMessageProps = {
 export const InputMessage: React.FC<InputMessageProps> = ({ contactId }) => {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState<Message[]>([]);
-  const socketRef = useRef<ReturnType<typeof createMessagingSocket> | null>(null);
+  const socketRef = useRef<ReturnType<typeof createMessagingSocket> | null>(
+    null,
+  );
 
   useEffect(() => {
     const socket = createMessagingSocket();
@@ -60,9 +60,13 @@ export const InputMessage: React.FC<InputMessageProps> = ({ contactId }) => {
   const sendMessage = () => {
     if (!message.trim()) return;
 
-    socketRef.current?.emit('send_message', { contactId, text: message }, (result: { error?: string }) => {
-      if (result?.error) console.error(result.error);
-    });
+    socketRef.current?.emit(
+      'send_message',
+      { contactId, text: message },
+      (result: { error?: string }) => {
+        if (result?.error) console.error(result.error);
+      },
+    );
     setMessage('');
   };
 
@@ -83,7 +87,9 @@ export const InputMessage: React.FC<InputMessageProps> = ({ contactId }) => {
         {messages.map((msg) => (
           <div
             key={msg.id}
-            className='flex justify-end rounded-lg bg-green-100 p-2 px-3 font-bold text-black shadow-xl'
+            className={
+              msg.sender === 'user' ? 'flex justify-end' : 'flex justify-start'
+            }
           >
             {msg.text}
           </div>
