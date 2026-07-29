@@ -1,11 +1,4 @@
-export type Contact = {
-  id: number;
-  firstName: string;
-  lastName: string;
-  avatar: string;
-  phone: string;
-  email: string;
-};
+import type { Contact } from '../types/index.js';
 
 export const contacts: Contact[] = [
   {

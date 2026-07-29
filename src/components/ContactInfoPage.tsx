@@ -1,6 +1,6 @@
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { contacts } from '../data/contacts';
+import { contacts } from '../../server/data/contacts';
 import { InputMessage } from './InputField';
 
 export const ContactInfoPage: React.FC = () => {

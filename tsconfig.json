@@ -14,7 +14,10 @@
     "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
-      "@server/*": ["server/*"]
+      "@server/*": ["server/*"],
+      "@components/*": ["src/components/*"],
+      "@data/*": ["src/data/*"],
+      "@/*": ["src/*"]
     }
   }
 }
