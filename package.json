@@ -3,10 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "imports": {
-    "#server/*": "./server/*",
-    "#components/*": "./src/components/*"
-  },
+  
   "scripts": {
     "dev": "vite",
     "server": "node server/index.mjs",

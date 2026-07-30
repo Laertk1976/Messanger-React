@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getContacts } from '../api';
+import { getContacts } from '@/api';
 import type { Contact } from '@server/types';
 import InputField from './InputField';
 //  import { ContactInfoPage } from './ContactInfoPage';
