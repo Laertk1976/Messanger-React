@@ -1,9 +1,14 @@
 import type { Contact } from '@server/types';
 import { createContext, useContext } from 'react';
 
+type AuthResult = {
+  success: boolean;
+  message?: string;
+};
+
 type AuthContextType = {
   user: Contact | null;
-  login: (identifier: string, password: string) => Promise<boolean>;
+  login: (identifier: string, password: string) => Promise<AuthResult>;
   logout: () => void;
 };
 

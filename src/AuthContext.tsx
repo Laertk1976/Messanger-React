@@ -44,14 +44,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
 
       if (!response.ok) {
-        return false;
+        const body = await response.json().catch(() => null);
+        return {
+          success: false,
+          message: typeof body?.error === 'string' ? body.error : 'Invalid email/phone or password.',
+        };
       }
 
       const result = (await response.json()) as { contact: Contact };
       setUser(result.contact);
-      return true;
+      return { success: true };
     } catch {
-      return false;
+      return {
+        success: false,
+        message: 'Unable to connect to the login service. Please try again.',
+      };
     }
   };
 

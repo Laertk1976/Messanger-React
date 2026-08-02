@@ -1,15 +1,17 @@
 import type { FormEvent } from 'react';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth';
 
 export function LoginPage() {
   const { user, login } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
+  const from = (location.state as { from?: { pathname: string } })?.from?.pathname ?? '/';
 
   useEffect(() => {
     if (user) {
@@ -31,13 +33,13 @@ export function LoginPage() {
       return;
     }
 
-    const success = await login(trimmed, password);
-    if (success) {
-      navigate('/', { replace: true });
+    const result = await login(trimmed, password);
+    if (result.success) {
+      navigate(from, { replace: true });
       return;
     }
 
-    setError('Invalid email/phone or password.');
+    setError(result.message ?? 'Invalid email/phone or password.');
   };
 
   return (
