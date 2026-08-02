@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+// import { Search, Mic, MicOff, LogIn, LogOut, User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { getContacts } from '@/api';
 import type { Contact } from '@server/types';
@@ -8,7 +9,38 @@ import InputField from './InputField';
 export const ContactPage: React.FC = () => {
   const [search, setSearch] = useState('');
   const [contacts, setContacts] = useState<Contact[]>([]);
+  // const [searchQuery, setSearchQuery] = useState('');
+  // const [isListening, setIsListening] = useState(false);
+  // const [user, setUser] = useState(null);
   const navigate = useNavigate();
+
+  // const handleVoiceInput = () => {
+  //   const SpeechRecognition =
+  //     window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  //   if (!SpeechRecognition) {
+  //     alert('Voice recognition is not supported in this browser.');
+  //     return;
+  //   }
+
+  //   const recognition = new SpeechRecognition();
+  //   recognition.lang = 'en-US';
+  //   recognition.continuous = false;
+  //   recognition.interimResults = false;
+
+  //   recognition.onstart = () => setIsListening(true);
+  //   recognition.onend = () => setIsListening(false);
+  //   recognition.onerror = (event) => {
+  //     console.error('Speech recognition error:', event.error);
+  //     setIsListening(false);
+  //   };
+
+  //   recognition.onresult = (event) => {
+  //     const transcript = event.results[0][0].transcript;
+  //     setSearchQuery(transcript);
+  //   };
+  //   recognition.start();
+  // };
 
   useEffect(() => {
     getContacts().then(setContacts).catch(console.error);
@@ -26,7 +58,7 @@ export const ContactPage: React.FC = () => {
   return (
     <>
       <InputField value={search} onChange={setSearch} />
-      <div className='mt-46 bg-white px-4'>
+      <div className='mt-26 bg-white px-4'>
         {filteredContacts.map((contact) => (
           <button
             key={contact.id}

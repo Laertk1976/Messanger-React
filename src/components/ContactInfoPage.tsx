@@ -1,6 +1,6 @@
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { contacts } from '@server/data/contacts';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { contacts } from '../../server/data/contacts';
 import { InputMessage } from './InputField';
 
 export const ContactInfoPage: React.FC = () => {
@@ -18,14 +18,14 @@ export const ContactInfoPage: React.FC = () => {
   return (
     <>
       <div
-        className='mt-20 ml-5 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-blue-300'
+        className='mt-8 ml-5 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-blue-300 shadow-lg'
         onClick={() => navigate('/')}
       >
         <ArrowBackIcon />
       </div>
       <div className='flex flex-col justify-between'>
         <div className='mt-5 px-4'>
-          <div className='rounded-2xl border border-neutral-400 bg-blue-100 p-6 shadow-2xl'>
+          <div className='rounded-2xl border border-neutral-400 bg-blue-100 p-4 shadow-2xl'>
             <img
               src={contact.avatar}
               alt={contact.firstName}

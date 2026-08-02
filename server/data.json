@@ -41,6 +41,43 @@
       "email": "daniel.wilson@example.com"
     }
   ],
+  "users": [
+    {
+      "id": 1,
+      "email": "john.smith@example.com",
+      "phone": "+1 555-123-4567",
+      "password": "Password123",
+      "contactId": 1
+    },
+    {
+      "id": 2,
+      "email": "emma.johnson@example.com",
+      "phone": "+1 555-987-6543",
+      "password": "Password123",
+      "contactId": 2
+    },
+    {
+      "id": 3,
+      "email": "michael.brown@example.com",
+      "phone": "+1 555-222-3344",
+      "password": "Password123",
+      "contactId": 3
+    },
+    {
+      "id": 4,
+      "email": "sophia.davis@example.com",
+      "phone": "+1 555-444-5566",
+      "password": "Password123",
+      "contactId": 4
+    },
+    {
+      "id": 5,
+      "email": "daniel.wilson@example.com",
+      "phone": "+1 555-777-8899",
+      "password": "Password123",
+      "contactId": 5
+    }
+  ],
   "messages": [
     {
       "id": 1784745886878,
@@ -62,6 +99,13 @@
       "text": "fafhahah",
       "sender": "user",
       "createdAt": "2026-07-22T18:45:23.109Z"
+    },
+    {
+      "id": 1785648964872,
+      "contactId": 1,
+      "text": "dbdbg",
+      "sender": "user",
+      "createdAt": "2026-08-02T05:36:04.872Z"
     }
   ]
 }

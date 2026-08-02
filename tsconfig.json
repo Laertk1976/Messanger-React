@@ -12,12 +12,11 @@
     "esModuleInterop": true,
     "outDir": "dist",
     "resolveJsonModule": true,
-    "baseUrl": ".",
     "paths": {
-      "@server/*": ["server/*"],
-      "@components/*": ["src/components/*"],
-      "@data/*": ["src/data/*"],
-      "@/*": ["src/*"]
+      "@server/*": ["./server/*"],
+      "@components/*": ["./src/components/*"],
+      "@data/*": ["./src/data/*"],
+      "@/*": ["./src/*"]
     }
   }
 }

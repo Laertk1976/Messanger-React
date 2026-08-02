@@ -10,6 +10,8 @@ const currentDirectory = dirname(fileURLToPath(import.meta.url));
 const databasePath = join(currentDirectory, 'data.json');
 const port = Number(process.env.PORT ?? 3001);
 
+const normalizePhone = (value) => value.replace(/\D/g, '');
+
 const seedContacts = [
   { id: 1, firstName: 'John', lastName: 'Smith', avatar: 'https://i.pravatar.cc/150?img=1', phone: '+1 555-123-4567', email: 'john.smith@example.com' },
   { id: 2, firstName: 'Emma', lastName: 'Johnson', avatar: 'https://i.pravatar.cc/150?img=5', phone: '+1 555-987-6543', email: 'emma.johnson@example.com' },
@@ -20,12 +22,24 @@ const seedContacts = [
 
 function loadDatabase() {
   if (!existsSync(databasePath)) {
-    const initialData = { contacts: seedContacts, messages: [] };
+    const initialData = {
+      contacts: seedContacts,
+      users: [
+        { id: 1, email: 'john.smith@example.com', phone: '+1 555-123-4567', password: 'Password123', contactId: 1 },
+        { id: 2, email: 'emma.johnson@example.com', phone: '+1 555-987-6543', password: 'Password123', contactId: 2 },
+        { id: 3, email: 'michael.brown@example.com', phone: '+1 555-222-3344', password: 'Password123', contactId: 3 },
+        { id: 4, email: 'sophia.davis@example.com', phone: '+1 555-444-5566', password: 'Password123', contactId: 4 },
+        { id: 5, email: 'daniel.wilson@example.com', phone: '+1 555-777-8899', password: 'Password123', contactId: 5 },
+      ],
+      messages: [],
+    };
     writeFileSync(databasePath, JSON.stringify(initialData, null, 2));
     return initialData;
   }
 
-  return JSON.parse(readFileSync(databasePath, 'utf8'));
+  const loaded = JSON.parse(readFileSync(databasePath, 'utf8'));
+  loaded.users = loaded.users ?? [];
+  return loaded;
 }
 
 function saveDatabase(database) {
@@ -50,6 +64,32 @@ app.get('/api/contacts/:contactId/messages', (request, response) => {
   const contactId = Number(request.params.contactId);
   const messages = database.messages.filter((message) => message.contactId === contactId);
   response.json(messages);
+});
+
+app.post('/api/login', (request, response) => {
+  const { identifier, password } = request.body;
+
+  if (typeof identifier !== 'string' || typeof password !== 'string') {
+    return response.status(400).json({ error: 'Identifier and password are required.' });
+  }
+
+  const normalizedIdentifier = identifier.trim().toLowerCase();
+  const matchedUser = database.users.find(
+    (user) =>
+      user.email.toLowerCase() === normalizedIdentifier ||
+      normalizePhone(user.phone) === normalizePhone(identifier),
+  );
+
+  if (!matchedUser || matchedUser.password !== password) {
+    return response.status(401).json({ error: 'Invalid email/phone or password.' });
+  }
+
+  const contact = database.contacts.find((contact) => contact.id === matchedUser.contactId);
+  if (!contact) {
+    return response.status(500).json({ error: 'Linked contact not found.' });
+  }
+
+  return response.json({ contact });
 });
 
 function createMessage(contactId, text) {

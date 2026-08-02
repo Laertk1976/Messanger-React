@@ -1,5 +1,5 @@
+import type { Contact } from '@server/types';
 import { io } from 'socket.io-client';
-import type { Contact } from './data/contacts';
 
 export type Message = {
   id: number;
@@ -10,7 +10,7 @@ export type Message = {
 };
 
 export async function getContacts(): Promise<Contact[]> {
-  const response = await fetch('http://localhost:3000/api/contacts');
+  const response = await fetch('/api/contacts');
 
   if (!response.ok) {
     throw new Error('Unable to load contacts');
@@ -21,7 +21,7 @@ export async function getContacts(): Promise<Contact[]> {
 
 export async function getMessages(contactId: number): Promise<Message[]> {
   const response = await fetch(
-    `http://localhost:3000/api/contacts/${contactId}/messages`,
+    `/api/contacts/${contactId}/messages`,
   );
 
   if (!response.ok) {
@@ -32,5 +32,5 @@ export async function getMessages(contactId: number): Promise<Message[]> {
 }
 
 export function createMessagingSocket() {
-  return io('http://localhost:3000');
+  return io();
 }

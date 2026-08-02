@@ -1,6 +1,6 @@
-import SearchIcon from '@mui/icons-material/Search';
-import SendIcon from '@mui/icons-material/Send';
 import React, { useEffect, useRef, useState } from 'react';
+import SearchIcon from '@mui/icons-material/Search';
+import Send from '@mui/icons-material/Send';
 import { createMessagingSocket, getMessages, type Message } from '../api';
 
 type InputFieldProps = {
@@ -25,7 +25,7 @@ export const InputField: React.FC<InputFieldProps> = ({ value, onChange }) => {
         onChange={(e) => onChange(e.target.value)}
         className='h-full w-full rounded-2xl border bg-white p-2 text-lg text-black shadow-xl'
       />
-      <SearchIcon className='absolute top-1/2 right-5 -translate-y-1/2 transform text-gray-500' />
+      <SearchIcon className='absolute top-1/2 right-6 -translate-y-1/2 transform text-gray-500' />
     </div>
   );
 };
@@ -108,7 +108,7 @@ export const InputMessage: React.FC<InputMessageProps> = ({ contactId }) => {
         />
 
         <button type='button' onClick={handleSend} className='cursor-pointer'>
-          <SendIcon color='primary' />
+          <Send className='text-blue-600' />
         </button>
       </div>
     </div>
