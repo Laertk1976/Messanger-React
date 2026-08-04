@@ -1,5 +1,6 @@
 import type { Contact } from '@server/types';
 import React, { useMemo, useState } from 'react';
+import contacts from '../server/data/contacts';
 import { AuthContext } from './auth';
 
 const STORAGE_KEY = 'reactProject_auth_user';
