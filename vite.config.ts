@@ -1,8 +1,8 @@
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
+import path from 'node:path';
 import { defineConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
-import path from 'node:path';
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -17,9 +17,9 @@ export default defineConfig({
 
   server: {
     proxy: {
-      '/api': 'http://localhost:3001',
+      '/api': 'http://localhost:3003',
       '/socket.io': {
-        target: 'http://localhost:3001',
+        target: 'http://localhost:3003',
         ws: true,
       },
     },

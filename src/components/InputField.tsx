@@ -91,7 +91,15 @@ export const InputMessage: React.FC<InputMessageProps> = ({ contactId }) => {
               msg.sender === 'user' ? 'flex justify-end' : 'flex justify-start'
             }
           >
-            {msg.text}
+            <div
+              className={
+                msg.sender === 'user'
+                  ? 'non-italic max-w-xs items-center justify-center rounded-sm bg-blue-500/90 px-2 font-medium text-white shadow-[0_4px_20px_rgba(0,0,0,0.08)]/20 backdrop-blur-xl'
+                  : 'max-w-xs items-center justify-center rounded-sm bg-green-400/90 px-2 text-white shadow-[0_4px_20px_rgba(0,0,0,0.08)]/20'
+              }
+            >
+              {msg.text}
+            </div>
           </div>
         ))}
       </div>

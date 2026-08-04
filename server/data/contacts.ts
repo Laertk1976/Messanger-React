@@ -35,11 +35,11 @@ export const contacts: Contact[] = [
   },
   {
     id: 5,
-    firstName: 'Daniel',
-    lastName: 'Wilson',
+    firstName: 'Laert',
+    lastName: 'Karapetyan',
     avatar: 'https://i.pravatar.cc/150?img=33',
-    phone: '+1 555-777-8899',
-    email: 'daniel.wilson@example.com',
+    phone: '+37493080188',
+    email: 'laert.karapetyan@example.com',
   },
 ];
 export default contacts;

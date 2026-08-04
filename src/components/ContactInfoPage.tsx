@@ -17,12 +17,15 @@ export const ContactInfoPage: React.FC = () => {
 
   return (
     <>
-      <div
-        className='mt-8 ml-5 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-blue-300 shadow-lg'
+      <button
+        type='button'
+        aria-label='Go back to contacts'
+        className='mt-8 ml-5 flex items-center gap-2 rounded-full bg-blue-300/90 px-4 py-2 text-sm font-medium text-slate-800 shadow-[0_8px_24px_rgba(0,0,0,0.12)] transition hover:bg-blue-400'
         onClick={() => navigate('/')}
       >
         <ArrowBackIcon />
-      </div>
+        <span>Back</span>
+      </button>
       <div className='flex flex-col justify-between'>
         <div className='mt-5 px-4'>
           <div className='rounded-2xl border border-neutral-400 bg-blue-100 p-4 shadow-2xl'>
