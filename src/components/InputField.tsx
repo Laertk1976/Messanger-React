@@ -1,7 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import Send from '@mui/icons-material/Send';
-import { createMessagingSocket, getMessages, type Message } from '../api';
+import { sendMessage, subscribeMessages, type Message } from '../api';
+import { useAuth } from '../auth';
 
 type InputFieldProps = {
   value: string;
@@ -31,52 +32,33 @@ export const InputField: React.FC<InputFieldProps> = ({ value, onChange }) => {
 };
 export default InputField;
 
-type InputMessageProps = {
-  contactId: number;
-};
+type InputMessageProps = { contactId: string };
 
 export const InputMessage: React.FC<InputMessageProps> = ({ contactId }) => {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState<Message[]>([]);
-  const socketRef = useRef<ReturnType<typeof createMessagingSocket> | null>(
-    null,
-  );
+  const { user } = useAuth();
 
   useEffect(() => {
-    const socket = createMessagingSocket();
-    socketRef.current = socket;
-    socket.emit('join_contact', contactId);
-    getMessages(contactId).then(setMessages).catch(console.error);
-    socket.on('new_message', (newMessage: Message) => {
-      setMessages((previous) => [...previous, newMessage]);
-    });
+    if (!user || typeof user.id !== 'string') return;
+    return subscribeMessages(user.id, contactId, setMessages);
+  }, [contactId, user]);
 
-    return () => {
-      socket.disconnect();
-      socketRef.current = null;
-    };
-  }, [contactId]);
-
-  const sendMessage = () => {
+  const submitMessage = () => {
     if (!message.trim()) return;
 
-    socketRef.current?.emit(
-      'send_message',
-      { contactId, text: message },
-      (result: { error?: string }) => {
-        if (result?.error) console.error(result.error);
-      },
-    );
+    if (!user || typeof user.id !== 'string') return;
+    void sendMessage(user.id, contactId, message.trim()).catch(console.error);
     setMessage('');
   };
 
   const handleSend = () => {
-    sendMessage();
+    submitMessage();
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
-      sendMessage();
+      submitMessage();
     }
   };
 
@@ -88,12 +70,12 @@ export const InputMessage: React.FC<InputMessageProps> = ({ contactId }) => {
           <div
             key={msg.id}
             className={
-              msg.sender === 'user' ? 'flex justify-end' : 'flex justify-start'
+              msg.senderId === user?.id ? 'flex justify-end' : 'flex justify-start'
             }
           >
             <div
               className={
-                msg.sender === 'user'
+                msg.senderId === user?.id
                   ? 'non-italic max-w-xs items-center justify-center rounded-sm bg-blue-500/90 px-2 font-medium text-white shadow-[0_4px_20px_rgba(0,0,0,0.08)]/20 backdrop-blur-xl'
                   : 'max-w-xs items-center justify-center rounded-sm bg-green-400/90 px-2 text-white shadow-[0_4px_20px_rgba(0,0,0,0.08)]/20'
               }

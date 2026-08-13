@@ -1,8 +1,9 @@
-import { getContacts } from '@/api';
+import { subscribeContacts } from '@/api';
 import type { Contact } from '@server/types';
 import React, { useDeferredValue, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import InputField from './InputField';
+import { useAuth } from '../auth';
 
 type ContactListItemProps = {
   contact: Contact;
@@ -38,22 +39,12 @@ export const ContactPage: React.FC = () => {
   const deferredSearch = useDeferredValue(search);
   const [contacts, setContacts] = useState<Contact[]>([]);
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   useEffect(() => {
-    let active = true;
-
-    getContacts()
-      .then((data) => {
-        if (active) {
-          setContacts(data);
-        }
-      })
-      .catch(console.error);
-
-    return () => {
-      active = false;
-    };
-  }, []);
+    if (!user || typeof user.id !== 'string') return;
+    return subscribeContacts(user.id, setContacts);
+  }, [user]);
 
   const handleContactClick = React.useCallback(
     (contact: Contact) => {

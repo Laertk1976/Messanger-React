@@ -13,6 +13,9 @@ const ContactPage = lazy(() =>
 const ContactInfoPage = lazy(() =>
   import('./components/ContactInfoPage').then((module) => ({ default: module.ContactInfoPage })),
 );
+const ProfilePage = lazy(() =>
+  import('./components/ProfilePage').then((module) => ({ default: module.ProfilePage })),
+);
 
 export function App() {
   return (
@@ -38,6 +41,14 @@ export function App() {
               element={
                 <ProtectedRoute>
                   <ContactInfoPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path='/profile'
+              element={
+                <ProtectedRoute>
+                  <ProfilePage />
                 </ProtectedRoute>
               }
             />

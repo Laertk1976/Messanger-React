@@ -27,7 +27,13 @@ export function Header() {
                 </button>
               ) : (
                 <>
-                  <span className='text-sm text-white/80'>Signed in as {user.firstName}</span>
+                  <button
+                    type='button'
+                    onClick={() => navigate('/profile')}
+                    className='text-sm text-white/80 transition hover:text-white hover:underline'
+                  >
+                    Signed in as {user.firstName}
+                  </button>
                   <button
                     type='button'
                     className='rounded-lg bg-transparent px-3 py-1 text-white ring-1 ring-white/20 transition hover:bg-white/10'
