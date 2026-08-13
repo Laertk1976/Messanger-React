@@ -1,62 +1,9 @@
-import { StackScreenProps } from '@react-navigation/stack';
+import type { StackScreenProps } from '@react-navigation/stack';
 import React from 'react';
-import { Button, Image, StyleSheet, Text, View } from 'react-native';
+import { Image, Pressable, Text, View } from 'react-native';
 import type { RootStackParamList } from '../navigation/AppNavigator';
-
-type ContactDetailScreenProps = StackScreenProps<RootStackParamList, 'ContactDetail'>;
-
-export function ContactDetailScreen({ route, navigation }: ContactDetailScreenProps) {
+type Props = StackScreenProps<RootStackParamList, 'ContactDetail'>;
+export function ContactDetailScreen({ route, navigation }: Props) {
   const { contact } = route.params;
-  return (
-    <View style={styles.container}>
-      <Button title='Back' onPress={() => navigation.goBack()} />
-      <View style={styles.card}>
-        <Image source={{ uri: contact.avatar }} style={styles.avatar} />
-        <Text style={styles.name}>
-          {contact.firstName} {contact.lastName}
-        </Text>
-        <Text style={styles.meta}>{contact.phone}</Text>
-        <Text style={styles.meta}>{contact.email}</Text>
-        <View style={styles.actions}>
-          <Button title='Open messages' onPress={() => navigation.navigate('Messages', { contact })} />
-        </View>
-      </View>
-    </View>
-  );
+  return <View className='flex-1 bg-slate-50 p-5'><Pressable className='self-start rounded-full bg-blue-100 px-4 py-2' onPress={() => navigation.goBack()}><Text className='font-semibold text-blue-800'>← Back</Text></Pressable><View className='mt-5 items-center rounded-2xl border border-slate-200 bg-white p-5'><Image source={{ uri: contact.avatar }} className='mb-3 h-20 w-20 rounded-full' /><Text className='text-xl font-bold text-slate-900'>{contact.firstName} {contact.lastName}</Text><Text className='mt-2 text-slate-500'>{contact.phone}</Text><Text className='mt-1 text-slate-500'>{contact.email}</Text><Pressable className='mt-5 rounded-xl bg-blue-600 px-5 py-3' onPress={() => navigation.navigate('Messages', { contact })}><Text className='font-bold text-white'>Open messages</Text></Pressable></View></View>;
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f8fafc',
-    padding: 20,
-  },
-  card: {
-    marginTop: 20,
-    backgroundColor: '#fff',
-    borderRadius: 16,
-    padding: 20,
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#e2e8f0',
-  },
-  avatar: {
-    width: 72,
-    height: 72,
-    borderRadius: 36,
-    marginBottom: 12,
-  },
-  name: {
-    fontSize: 20,
-    fontWeight: '700',
-    marginBottom: 6,
-  },
-  meta: {
-    fontSize: 15,
-    color: '#64748b',
-    marginTop: 4,
-  },
-  actions: {
-    marginTop: 16,
-  },
-});

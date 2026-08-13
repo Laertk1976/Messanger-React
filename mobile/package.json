@@ -7,7 +7,8 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@expo/metro-runtime": "~4.0.1",
@@ -15,6 +16,7 @@
     "@react-navigation/stack": "^7.10.18",
     "expo": "~52.0.0",
     "expo-status-bar": "~2.0.1",
+    "nativewind": "^4.2.6",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-native": "0.76.9",
@@ -25,6 +27,9 @@
     "react-native-web": "~0.19.13"
   },
   "devDependencies": {
-    "@babel/core": "^7.23.4"
+    "@babel/core": "^7.23.4",
+    "lightningcss-win32-x64-msvc": "^1.27.0",
+    "prettier-plugin-tailwindcss": "^0.5.11",
+    "tailwindcss": "^3.4.17"
   }
 }
