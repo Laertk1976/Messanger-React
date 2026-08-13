@@ -9,6 +9,8 @@ type AuthResult = {
 type AuthContextType = {
   user: Contact | null;
   login: (identifier: string, password: string) => Promise<AuthResult>;
+  register: (email: string, password: string) => Promise<AuthResult>;
+  updateAvatar: (file: File) => Promise<AuthResult>;
   logout: () => void;
 };
 

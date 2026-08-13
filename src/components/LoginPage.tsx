@@ -4,13 +4,14 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth';
 
 export function LoginPage() {
-  const { user, login } = useAuth();
+  const { user, login, register } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const [identifier, setIdentifier] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
+  const [isRegistering, setIsRegistering] = useState(false);
   const from = (location.state as { from?: { pathname: string } })?.from?.pathname ?? '/';
 
   useEffect(() => {
@@ -21,10 +22,10 @@ export function LoginPage() {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const trimmed = identifier.trim();
+    const trimmed = email.trim();
 
     if (!trimmed) {
-      setError('Please enter an email or phone number.');
+      setError('Please enter your email address.');
       return;
     }
 
@@ -33,31 +34,31 @@ export function LoginPage() {
       return;
     }
 
-    const result = await login(trimmed, password);
+    const result = await (isRegistering ? register(trimmed, password) : login(trimmed, password));
     if (result.success) {
       navigate(from, { replace: true });
       return;
     }
 
-    setError(result.message ?? 'Invalid email/phone or password.');
+    setError(result.message ?? 'Unable to sign in.');
   };
 
   return (
     <div className='mx-auto mt-10 max-w-md rounded-3xl border border-neutral-300 bg-white p-8 shadow-2xl'>
-      <h1 className='mb-4 text-3xl font-semibold text-slate-900'>Log in</h1>
-      <p className='mb-6 text-sm text-slate-600'>Use a contact email or phone number to sign in.</p>
+      <h1 className='mb-4 text-3xl font-semibold text-slate-900'>{isRegistering ? 'Create account' : 'Log in'}</h1>
+      <p className='mb-6 text-sm text-slate-600'>Use your email address to securely access your messages.</p>
 
       <form onSubmit={handleSubmit} className='space-y-4'>
         <label className='block'>
-          <span className='text-sm font-medium text-slate-700'>Email or phone</span>
+          <span className='text-sm font-medium text-slate-700'>Email</span>
           <input
-            type='text'
-            value={identifier}
+            type='email'
+            value={email}
             onChange={(event) => {
-              setIdentifier(event.target.value);
+              setEmail(event.target.value);
               setError('');
             }}
-            placeholder='john.smith@example.com or +1 555-123-4567'
+            placeholder='you@example.com'
             className='mt-2 w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 py-3 text-base text-slate-900 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200'
           />
         </label>
@@ -72,7 +73,7 @@ export function LoginPage() {
                 setPassword(event.target.value);
                 setError('');
               }}
-              placeholder='Password123'
+              placeholder={isRegistering ? 'At least 6 characters' : 'Your password'}
               className='w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 py-3 pr-28 text-base text-slate-900 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200'
             />
             <button
@@ -91,7 +92,17 @@ export function LoginPage() {
           type='submit'
           className='w-full rounded-full bg-blue-600 px-4 py-3 text-white transition hover:bg-blue-700'
         >
-          Sign in
+          {isRegistering ? 'Create account' : 'Sign in'}
+        </button>
+        <button
+          type='button'
+          onClick={() => {
+            setIsRegistering((value) => !value);
+            setError('');
+          }}
+          className='w-full text-sm text-blue-700 underline underline-offset-4 hover:text-blue-900'
+        >
+          {isRegistering ? 'Already have an account? Sign in' : 'New here? Create an account'}
         </button>
       </form>
     </div>

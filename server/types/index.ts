@@ -1,7 +1,7 @@
 // server/types/index.ts
 
 export type Contact = {
-  id: number;
+  id: number | string;
   firstName: string;
   lastName: string;
   avatar: string;

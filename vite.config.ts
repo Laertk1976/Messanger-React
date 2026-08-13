@@ -54,9 +54,9 @@ export default defineConfig({
 
   server: {
     proxy: {
-      '/api': 'http://localhost:3003',
+      '/api': 'http://localhost:3001',
       '/socket.io': {
-        target: 'http://localhost:3003',
+        target: 'http://localhost:3001',
         ws: true,
       },
     },

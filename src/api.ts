@@ -1,79 +1,59 @@
 import type { Contact } from '@server/types';
-import { io } from 'socket.io-client';
+import {
+  addDoc,
+  collection,
+  doc,
+  getDoc,
+  onSnapshot,
+  orderBy,
+  query,
+  serverTimestamp,
+  setDoc,
+} from 'firebase/firestore';
+import { firestore } from './firebase';
 
 export type Message = {
-  id: number;
-  contactId: number;
+  id: string;
   text: string;
-  sender: 'user' | 'contact';
-  createdAt: string;
+  senderId: string;
+  createdAt: Date | null;
 };
 
-let contactsCache: { data: Contact[] | null; promise: Promise<Contact[]> | null } = {
-  data: null,
-  promise: null,
-};
-
-const messageCache = new Map<number, { data: Message[] | null; promise: Promise<Message[]> | null }>();
-
-export async function getContacts(): Promise<Contact[]> {
-  if (contactsCache.data) {
-    return contactsCache.data;
-  }
-
-  if (contactsCache.promise) {
-    return contactsCache.promise;
-  }
-
-  const promise = fetch('/api/contacts')
-    .then(async (response) => {
-      if (!response.ok) {
-        throw new Error('Unable to load contacts');
-      }
-
-      const contacts = (await response.json()) as Contact[];
-      contactsCache = { data: contacts, promise: null };
-      return contacts;
-    })
-    .catch((error) => {
-      contactsCache = { data: null, promise: null };
-      throw error;
-    });
-
-  contactsCache.promise = promise;
-  return promise;
+export function subscribeContacts(currentUid: string, onChange: (contacts: Contact[]) => void) {
+  return onSnapshot(collection(firestore, 'users'), (snapshot) => {
+    const contacts = snapshot.docs
+      .filter((item) => item.id !== currentUid)
+      .map((item) => item.data() as Contact)
+      .sort((a, b) => `${a.firstName} ${a.lastName}`.localeCompare(`${b.firstName} ${b.lastName}`));
+    onChange(contacts);
+  });
 }
 
-export async function getMessages(contactId: number): Promise<Message[]> {
-  const cached = messageCache.get(contactId);
-
-  if (cached?.data) {
-    return cached.data;
-  }
-
-  if (cached?.promise) {
-    return cached.promise;
-  }
-
-  const promise = fetch(`/api/contacts/${contactId}/messages`)
-    .then(async (response) => {
-      if (!response.ok) {
-        throw new Error('Unable to load messages');
-      }
-
-      const messages = (await response.json()) as Message[];
-      messageCache.set(contactId, { data: messages, promise: null });
-      return messages;
-    })
-    .catch((error) => {
-      messageCache.set(contactId, { data: null, promise: null });
-      throw error;
-    });
-
-  messageCache.set(contactId, { data: null, promise });
-  return promise;
+function conversationId(firstUid: string, secondUid: string) {
+  return [firstUid, secondUid].sort().join('_');
 }
 
-export function createMessagingSocket() {
-  return io();
+export function subscribeMessages(currentUid: string, contactUid: string, onChange: (messages: Message[]) => void) {
+  const id = conversationId(currentUid, contactUid);
+  const messages = query(collection(firestore, 'conversations', id, 'messages'), orderBy('createdAt'));
+  return onSnapshot(messages, (snapshot) => {
+    onChange(snapshot.docs.map((item) => {
+      const data = item.data();
+      return { id: item.id, text: String(data.text ?? ''), senderId: String(data.senderId), createdAt: data.createdAt?.toDate?.() ?? null };
+    }));
+  });
+}
+
+export async function sendMessage(currentUid: string, contactUid: string, text: string) {
+  const id = conversationId(currentUid, contactUid);
+  const conversation = doc(firestore, 'conversations', id);
+  const existing = await getDoc(conversation);
+  if (!existing.exists()) {
+    await setDoc(conversation, { members: [currentUid, contactUid], createdAt: serverTimestamp() });
+  }
+  await addDoc(collection(firestore, 'conversations', id, 'messages'), {
+    text,
+    senderId: currentUid,
+    createdAt: serverTimestamp(),
+  });
 }
