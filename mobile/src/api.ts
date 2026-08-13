@@ -1,7 +1,8 @@
 import { io, Socket } from 'socket.io-client';
 import type { Contact } from './types';
 
-const API_BASE_URL = 'http://192.168.1.126:3001';
+// Set EXPO_PUBLIC_API_URL in mobile/.env for a physical device.
+const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL ?? 'http://10.0.2.2:3001';
 
 export type Message = {
   id: number;

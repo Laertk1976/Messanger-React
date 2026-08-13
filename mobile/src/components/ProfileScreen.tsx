@@ -1,0 +1,7 @@
+import type { StackScreenProps } from '@react-navigation/stack';
+import React from 'react';
+import { Alert, Image, Pressable, Text, View } from 'react-native';
+import { useAuth } from '../auth';
+import type { RootStackParamList } from '../navigation/AppNavigator';
+type Props = StackScreenProps<RootStackParamList, 'Profile'>;
+export function ProfileScreen({ navigation }: Props) { const { user, signOut } = useAuth(); if (!user) return null; const name = [user.firstName, user.lastName].filter(Boolean).join(' '); return <View className='flex-1 bg-slate-50 p-5'><View className='mb-6 items-center rounded-2xl border border-slate-200 bg-white p-7'><Image source={{ uri: user.avatar }} className='mb-5 h-28 w-28 rounded-full border-4 border-blue-100' /><Text className='text-xs font-bold tracking-widest text-blue-600'>MY PROFILE</Text><Text className='mt-1 text-3xl font-bold text-slate-900'>{name}</Text><Text className='mt-2 text-center text-slate-600'>{user.email}</Text>{user.phone ? <Text className='mt-1 text-slate-500'>{user.phone}</Text> : null}</View><Pressable className='mb-3 items-center rounded-xl bg-blue-600 p-4' onPress={() => navigation.navigate('Contacts')}><Text className='font-bold text-white'>Back to contacts</Text></Pressable><Pressable className='items-center rounded-xl border border-slate-300 p-4' onPress={() => Alert.alert('Log out', 'Do you want to log out?', [{ text: 'Cancel', style: 'cancel' }, { text: 'Log out', style: 'destructive', onPress: signOut }])}><Text className='font-bold text-slate-700'>Log out</Text></Pressable></View>; }
