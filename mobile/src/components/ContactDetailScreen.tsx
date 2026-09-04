@@ -1,5 +1,4 @@
 import type { StackScreenProps } from '@react-navigation/stack';
-import React from 'react';
 import { Image, Pressable, Text, View } from 'react-native';
 import type { RootStackParamList } from '../navigation/AppNavigator';
 type Props = StackScreenProps<RootStackParamList, 'ContactDetail'>;
@@ -23,12 +22,22 @@ export function ContactDetailScreen({ route, navigation }: Props) {
         </Text>
         <Text className='mt-2 text-slate-500'>{contact.phone}</Text>
         <Text className='mt-1 text-slate-500'>{contact.email}</Text>
-        <Pressable
-          className='mt-5 rounded-xl bg-blue-600 px-5 py-3'
-          onPress={() => navigation.navigate('Messages', { contact })}
-        >
-          <Text className='font-bold text-white'>Open messages</Text>
-        </Pressable>
+
+        <View className='mt-5 w-full flex-row justify-between gap-3'>
+          <Pressable
+            className='flex-1 rounded-xl bg-blue-600 px-5 py-3'
+            onPress={() => navigation.navigate('Messages', { contact })}
+          >
+            <Text className='text-center font-bold text-white'>Open messages</Text>
+          </Pressable>
+
+          <Pressable
+            className='flex-1 rounded-xl bg-emerald-600 px-5 py-3'
+            onPress={() => navigation.navigate('VoiceCall', { contact })}
+          >
+            <Text className='text-center font-bold text-white'>Voice call</Text>
+          </Pressable>
+        </View>
       </View>
     </View>
   );

@@ -6,10 +6,11 @@ export function Header() {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, logout } = useAuth();
-  const hideButtons = location.pathname === '/login' || location.pathname.startsWith('/contact/');
+  const hideButtons =
+    location.pathname === '/login' || location.pathname.startsWith('/contact/');
 
   return (
-    <header className='rounded-b-2xl bg-[#383b4a] shadow-xl'>
+    <header className='border border-none bg-[#4f66d7]/90 shadow-2xl backdrop-blur-xl'>
       <div className='flex h-18 items-center justify-between px-4'>
         <h1 className='text-3xl font-bold text-white'>OPUS</h1>
 

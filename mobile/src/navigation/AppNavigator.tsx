@@ -1,12 +1,12 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import React from 'react';
 import { useAuth } from '../auth';
 import { ContactDetailScreen } from '../components/ContactDetailScreen';
 import { ContactListScreen } from '../components/ContactListScreen';
 import { LoginScreen } from '../components/LoginScreen';
 import { MessageThreadScreen } from '../components/MessageThreadScreen';
 import { ProfileScreen } from '../components/ProfileScreen';
+import { VoiceCallScreen } from '../components/VoiceCallScreen';
 import type { Contact } from '../types';
 
 export type RootStackParamList = {
@@ -15,6 +15,7 @@ export type RootStackParamList = {
   ContactDetail: { contact: Contact };
   Messages: { contact: Contact };
   Profile: undefined;
+  VoiceCall: { contact: Contact };
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -29,6 +30,7 @@ export function AppNavigator() {
           <Stack.Screen name='ContactDetail' component={ContactDetailScreen} />
           <Stack.Screen name='Messages' component={MessageThreadScreen} />
           <Stack.Screen name='Profile' component={ProfileScreen} />
+          <Stack.Screen name='VoiceCall' component={VoiceCallScreen} />
         </>}
       </Stack.Navigator>
     </NavigationContainer>
